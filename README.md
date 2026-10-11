@@ -30,8 +30,8 @@ airline connections and which alternative routes remain available.
 
 🚧 In development — Milestone 0: Repository and environment setup.
 
-## Dataset
-git 
+## git
+
 FlightGraph will use the historical OpenFlights dataset,
 primarily `airports.dat` and `routes.dat`.
 
