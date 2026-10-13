@@ -7,7 +7,6 @@ import pandas as pd
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
 
-
 # --------------------------------------------------
 # 1. Configuration
 # --------------------------------------------------

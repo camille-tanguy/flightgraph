@@ -40,7 +40,6 @@ Source: <https://github.com/jpatokal/openflights>
 **Note:** OpenFlights does not necessarily represent current airline connections.
 Results will be interpreted accordingly.
 
-
 ## Database Setup
 
 FlightGraph uses Neo4j 5.26 and the historical OpenFlights dataset.
@@ -56,7 +55,7 @@ Neo4j password with your own.
 docker compose up -d
 ```
 
-Neo4j Browser is available at http://localhost:7474.
+Neo4j Browser is available at <http://localhost:7474>.
 
 ### 3. Install Python dependencies
 
