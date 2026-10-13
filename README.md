@@ -39,3 +39,64 @@ Source: <https://github.com/jpatokal/openflights>
 
 **Note:** OpenFlights does not necessarily represent current airline connections.
 Results will be interpreted accordingly.
+
+
+## Database Setup
+
+FlightGraph uses Neo4j 5.26 and the historical OpenFlights dataset.
+
+### 1. Configure the environment
+
+Create a `.env` file from `.env.example` and replace the placeholder
+Neo4j password with your own.
+
+### 2. Start Neo4j
+
+```bash
+docker compose up -d
+```
+
+Neo4j Browser is available at http://localhost:7474.
+
+### 3. Install Python dependencies
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Use a Python virtual environment for local development.
+
+### 4. Download the datasets
+
+Download `airports.dat` and `routes.dat` from the
+[OpenFlights GitHub repository](https://github.com/jpatokal/openflights/tree/master/data).
+
+Place them in:
+
+```text
+data/raw/
+├── airports.dat
+└── routes.dat
+```
+
+### 5. Initialize the database schema
+
+```bash
+python scripts/init_db.py
+```
+
+This creates the uniqueness constraints and airport lookup index.
+
+### 6. Import the flight network
+
+```bash
+python scripts/ingest_data.py
+```
+
+The ingestion script imports airports, countries, airlines, and their
+relationships into Neo4j.
+
+### Dataset limitations
+
+OpenFlights contains historical route information. Connections in
+FlightGraph should not be interpreted as current flight schedules.

@@ -3,3 +3,5 @@ uvicorn
 pytest
 pandas
 ipykernel
+neo4j
+python-dotenv
