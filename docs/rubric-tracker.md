@@ -57,9 +57,9 @@ The verified score is an internal progress indicator, not an official grade.
 
 ---
 
-# Evaluation Checklist
+## Evaluation Checklist
 
-## 1. Docker Infrastructure & Services — 9 points
+### 1. Docker Infrastructure & Services — 9 points
 
 | Requirement | Points | Status | Evidence |
 | --- | ---: | --- | --- |
@@ -69,7 +69,7 @@ The verified score is an internal progress indicator, not an official grade.
 | At least one image on a public registry | 2 | NOT STARTED | — |
 | Docker Compose starts cleanly | 1 | NOT STARTED | — |
 
-**Validated points: 0/9**
+**Validated points: 0/9*
 
 ## 2. Neo4j Database — 10 points
 
@@ -81,7 +81,7 @@ The verified score is an internal progress indicator, not an official grade.
 | Dataset ingestion script | 2 | NOT STARTED | — |
 | Dataset source documented and justified | 1 | NOT STARTED | — |
 
-**Validated points: 0/10**
+**Validated points: 0/10*
 
 ## 3. FastAPI — 6 points
 
@@ -92,7 +92,7 @@ The verified score is an internal progress indicator, not an official grade.
 | Functional Swagger documentation at `/docs` | 1 | NOT STARTED | — |
 | Proper HTTP error handling | 1 | NOT STARTED | — |
 
-**Validated points: 0/6**
+**Validated points: 0/6*
 
 ## 4. Advanced Cypher — 9 points
 
@@ -102,7 +102,7 @@ The verified score is an internal progress indicator, not an official grade.
 | Complex graph-pattern matching | 3 | NOT STARTED | — |
 | `WITH`, `UNWIND`, subqueries, and aggregations | 2 | NOT STARTED | — |
 
-**Validated points: 0/9**
+**Validated points: 0/9*
 
 ## 5. Optimization & Performance — 5 points
 
@@ -110,7 +110,7 @@ The verified score is an internal progress indicator, not an official grade.
 | --- | ---: | --- | --- |
 | Optimized queries, parameterization, indexes, and benchmarks | 5 | NOT STARTED | — |
 
-**Validated points: 0/5**
+**Validated points: 0/5*
 
 ## 6. Graph Data Science & Agentic — 13 points
 
@@ -121,7 +121,7 @@ The verified score is an internal progress indicator, not an official grade.
 | LangGraph, GraphRAG, or NL-to-Cypher component | 4 | NOT STARTED | — |
 | LLM reliability, validation, and guardrails | 4 | NOT STARTED | — |
 
-**Validated points: 0/13**
+**Validated points: 0/13*
 
 ## 7. Schemas & Modeling — 7 points
 
@@ -131,7 +131,7 @@ The verified score is an internal progress indicator, not an official grade.
 | System architecture diagram | 2 | NOT STARTED | — |
 | Modeling rationale and anti-genericity appendix | 3 | NOT STARTED | — |
 
-**Validated points: 0/7**
+**Validated points: 0/7*
 
 ## 8. Documentation — 5 points
 
@@ -140,7 +140,7 @@ The verified score is an internal progress indicator, not an official grade.
 | Comprehensive README with screenshots | 3 | IMPLEMENTED | `README.md` — initial version only |
 | Demonstration notebook (`demo.ipynb`) | 2 | NOT STARTED | — |
 
-**Validated points: 0/5**
+**Validated points: 0/5*
 
 ## 9. Clean Code — 4 points
 
@@ -150,7 +150,7 @@ The verified score is an internal progress indicator, not an official grade.
 | PEP 8 and clean architecture | 1 | NOT STARTED | — |
 | Appropriate docstrings | 1 | NOT STARTED | — |
 
-**Validated points: 0/4**
+**Validated points: 0/4*
 
 ## 10. Makefile & Automation — 3 points
 
@@ -160,7 +160,7 @@ The verified score is an internal progress indicator, not an official grade.
 | Functional commands and clear `make help` | 1 | NOT STARTED | — |
 | Makefile usage documented in README | 1 | NOT STARTED | — |
 
-**Validated points: 0/3**
+**Validated points: 0/3*
 
 ### Required Makefile Commands
 
@@ -186,7 +186,7 @@ Additional commands may be implemented when justified.
 | Test coverage ≥ 60% | 2 | NOT STARTED | — |
 | All tests pass with a coverage report | 1 | NOT STARTED | — |
 
-**Validated points: 0/10**
+**Validated points: 0/10*
 
 ## 12. Software Engineering Best Practices — 9 points
 
@@ -199,7 +199,7 @@ Additional commands may be implemented when justified.
 | Reverse proxy or authentication | 3 | NOT STARTED | — |
 | Index optimization demonstrated with `EXPLAIN` / `PROFILE` | 2 | NOT STARTED | — |
 
-**Validated points: 0/9**
+**Validated points: 0/9*
 
 ## 13. Collaboration & Git Management — 10 points
 
@@ -211,11 +211,11 @@ Additional commands may be implemented when justified.
 | At least 1 substantial merged PR per member | 3 | IMPLEMENTED | PR #1 — scope to be assessed |
 | Clear commit messages | 1 | IMPLEMENTED | Git commit history |
 
-**Validated points: 1/10**
+**Validated points: 1/10*
 
 ---
 
-# Scoring Summary
+## Scoring Summary
 
 | Category | Maximum Points | Validated Points |
 | --- | ---: | ---: |
@@ -244,7 +244,7 @@ It is not an official grade or a prediction of the final result.
 
 ---
 
-# Important Grading Risks
+## Important Grading Risks
 
 The professor's specification identifies several possible penalties.
 
@@ -274,7 +274,7 @@ The professor's specification identifies several possible penalties.
 
 ---
 
-# Milestone Progress
+## Milestone Progress
 
 | Milestone | Status |
 | --- | --- |
@@ -290,9 +290,9 @@ The professor's specification identifies several possible penalties.
 
 ---
 
-# Milestone 0 — Repository & Environment Setup
+## Milestone 0 — Repository & Environment Setup
 
-## Completed Work
+### Completed Work
 
 - Installed and configured Git.
 - Verified Python 3.13.3 installation.
@@ -309,7 +309,7 @@ The professor's specification identifies several possible penalties.
 - Opened and merged the first Pull Request.
 - Synchronized local `main` with GitHub.
 
-## Remaining Verification
+### Remaining Verification
 
 - Commit and merge the evaluation tracker.
 - Verify the final repository structure.
@@ -318,7 +318,7 @@ The professor's specification identifies several possible penalties.
 
 ---
 
-# Open Questions
+## Open Questions
 
 ## Solo Project Grading
 
@@ -347,7 +347,7 @@ The following decisions will be addressed in Milestone 1:
 
 ---
 
-# Project Management Principles
+## Project Management Principles
 
 1. Prioritize the professor's grading requirements.
 2. Keep the implementation realistic within 40–50 hours.
