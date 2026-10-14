@@ -13,3 +13,7 @@ uvicorn
 pytest
 pytest-cov
 httpx2
+
+# ML
+scikit-learn
+matplotlib

@@ -601,7 +601,7 @@ loses membership in the largest component.
 An exploratory component-membership comparison identified
 Ovda International Airport (VDA) as the additional affected airport.
 
-This finding has not yet been automated in the API response.
+This finding has not yet been automated in the API response
 
 ### Important Limitations
 
