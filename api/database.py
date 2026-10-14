@@ -1,5 +1,7 @@
 """Neo4j database connection for FlightGraph."""
 
+#Connect to Neo4j
+
 import os
 
 from dotenv import load_dotenv

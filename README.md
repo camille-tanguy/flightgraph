@@ -169,3 +169,62 @@ Shortest routes minimize the number of flight connections, not travel time or ti
 IATA codes are not guaranteed to uniquely identify airports in the underlying dataset.
 
 The reachability endpoint currently returns a maximum of 20 destinations.
+
+## Graph Analytics & Disruption Simulation
+
+FlightGraph uses Neo4j Graph Data Science (GDS) to analyze airline
+network connectivity and evaluate the structural impact of airport closures.
+
+### Graph Algorithms
+
+Two GDS algorithms are implemented:
+
+- **PageRank:** Identifies structurally influential airports based on
+  their position in the directed flight network.
+- **Weakly Connected Components (WCC):** Identifies connected groups
+  of airports while ignoring flight direction.
+
+The GDS projection contains:
+
+- 7,698 airports
+- 36,906 directed airport-to-airport connections
+
+### Airport Closure Simulation
+
+FlightGraph supports read-only simulations of single-airport closures.
+
+Example:
+
+```http
+GET /api/disruptions/airports/CDG
+```
+
+The simulator:
+
+1. Identifies the airport using its unique OpenFlights ID.
+2. Creates a temporary GDS graph excluding that airport.
+3. Calculates connectivity metrics using WCC.
+4. Compares baseline and disrupted networks.
+5. Deletes the temporary graph after the simulation.
+
+### Validated Example: CDG Closure
+
+| Metric | Before | After | Change |
+| --- | ---: | ---: | ---: |
+| Airports | 7,698 | 7,697 | -1 |
+| Directed connections | 36,906 | 36,436 | -470 |
+| Connected components | 4,491 | 4,492 | +1 |
+| Largest component | 3,188 | 3,186 | -2 |
+| Isolated airports | 4,484 | 4,485 | +1 |
+
+The simulation indicates that removing CDG causes limited fragmentation
+of the historical flight network despite eliminating 470 directed connections.
+
+### Limitations
+
+- OpenFlights contains historical routes, not live flight schedules.
+- WCC ignores flight direction and therefore cannot establish actual
+  passenger reachability.
+- PageRank measures structural influence, not necessarily disruption impact.
+- Simulations model network structure, not operational flight cancellations.
+- Temporary GDS projections consume memory during execution.
