@@ -1,11 +1,15 @@
 """FlightGraph REST API."""
 
+## Receive HTTP requests and return responses
+
 from fastapi import FastAPI, HTTPException, Path, Query
 
 from api.database import get_driver
+from api.disruption import simulate_airport_closure
 from api.models import (
     AirportResponse,
     ConnectionResponse,
+    DisruptionResponse,
     ReachableAirportResponse,
     ShortestPathResponse,
 )
@@ -278,3 +282,38 @@ def get_reachable_airports(
         ]
 
     return airports
+
+
+@app.get(
+    "/api/disruptions/airports/{iata}",
+    response_model=DisruptionResponse,
+)
+def get_airport_disruption(
+    iata: str = Path(
+        ...,
+        min_length=3,
+        max_length=3,
+        pattern=r"^[A-Za-z]{3}$",
+        description="IATA code of the airport to close",
+    ),
+) -> DisruptionResponse:
+    """Simulate the closure of an airport."""
+
+    with get_driver() as driver:
+        try:
+            result = simulate_airport_closure(driver, iata)
+        except ValueError as error:
+            message = str(error)
+
+            if "ambiguous" in message:
+                raise HTTPException(
+                    status_code=409,
+                    detail=message,
+                ) from error
+
+            raise HTTPException(
+                status_code=404,
+                detail=message,
+            ) from error
+
+    return DisruptionResponse.model_validate(result)

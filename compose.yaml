@@ -9,6 +9,8 @@ services:
 
     environment:
       NEO4J_AUTH: ${NEO4J_AUTH:?Set NEO4J_AUTH in your .env file}
+      NEO4J_PLUGINS: '["graph-data-science"]'
+      NEO4J_dbms_security_procedures_unrestricted: "gds.*"
 
     volumes:
       - neo4j_data:/data

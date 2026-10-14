@@ -1,5 +1,7 @@
 """Pydantic models for FlightGraph API responses."""
 
+#Validate response structures
+
 from pydantic import BaseModel, Field
 
 
@@ -65,3 +67,37 @@ class ReachableAirportResponse(BaseModel):
         ge=1,
         description="Minimum number of flights required"
     )
+
+class ConnectivityMetrics(BaseModel):
+        """Network connectivity measurements."""
+
+        total_components: int
+        largest_component: int
+        total_airports: int
+        isolated_airports: int
+
+
+class AirportIdentification(BaseModel):
+    """Information identifying an airport."""
+
+    airport_id: int
+    name: str
+    iata: str
+
+
+class ConnectivityChanges(BaseModel):
+    """Changes caused by an airport closure."""
+
+    components: int
+    largest_component: int
+    isolated_airports: int
+
+
+class DisruptionResponse(BaseModel):
+    """Structured result of an airport closure simulation."""
+
+    closed_airport: AirportIdentification
+    lost_routes: int = Field(ge=0)
+    baseline: ConnectivityMetrics
+    disrupted: ConnectivityMetrics
+    changes: ConnectivityChanges
