@@ -17,3 +17,6 @@ httpx2
 # ML
 scikit-learn
 matplotlib
+
+# AI Assistant
+openai # or another LLM

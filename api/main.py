@@ -1,11 +1,17 @@
-"""FlightGraph REST API."""
+"""FlightGraph REST API.
 
-## Receive HTTP requests and return responses
+Receive HTTP requests, validate parameters, and return structured responses.
+"""
 
 from fastapi import FastAPI, HTTPException, Path, Query
+from openai import APIConnectionError, AuthenticationError, RateLimitError
 
+from api.assistant_models import AssistantQuestion, AssistantResponse
+from api.assistant_service import answer_question
+from api.assistant_validation import InvalidAssistantIntent
 from api.database import get_driver
 from api.disruption import simulate_airport_closure
+from api.graph_queries import find_connections, find_shortest_route
 from api.models import (
     AirportResponse,
     ConnectionResponse,
@@ -105,48 +111,23 @@ def get_connections(
 ) -> list[ConnectionResponse]:
     """Retrieve direct outgoing connections from an airport."""
 
-    cypher = """
-    MATCH (source:Airport {iata: $iata})
-    MATCH (source)-[r:FLIES_TO]->(destination:Airport)
-    RETURN
-        destination.iata AS iata,
-        destination.name AS name,
-        destination.city AS city,
-        r.airline_count AS airline_count
-    ORDER BY airline_count DESC, destination.airport_id
-    LIMIT $limit
-    """
-
-    with get_driver() as driver, driver.session() as session:
-
-        # Check that the departure airport exists.
-        airport_exists = session.run(
-            """
-            MATCH (a:Airport {iata: $iata})
-            RETURN count(a) > 0 AS exists
-            """,
-            iata=iata.upper(),
-        ).single()["exists"]
-
-        if not airport_exists:
+    with get_driver() as driver:
+        try:
+            connections = find_connections(
+                driver,
+                iata,
+                limit=limit,
+            )
+        except LookupError as error:
             raise HTTPException(
                 status_code=404,
-                detail=f"Airport '{iata}' not found.",
-            )
+                detail=str(error),
+            ) from error
 
-        # Retrieve direct outgoing connections.
-        results = session.run(
-            cypher,
-            iata=iata.upper(),
-            limit=limit,
-        )
-
-        connections = [
-            ConnectionResponse.model_validate(dict(record))
-            for record in results
-        ]
-
-    return connections
+    return [
+        ConnectionResponse.model_validate(connection)
+        for connection in connections
+    ]
 
 
 # --------------------------------------------------
@@ -175,25 +156,12 @@ def get_shortest_path(
 ) -> ShortestPathResponse:
     """Find a directed shortest path between two airports."""
 
-    cypher = """
-    MATCH (source:Airport {iata: $source})
-    MATCH (destination:Airport {iata: $destination})
-    MATCH path = shortestPath(
-        (source)-[:FLIES_TO*..10]->(destination)
-    )
-    RETURN
-        [airport IN nodes(path) | airport.iata] AS airports,
-        length(path) AS flights
-    ORDER BY flights
-    LIMIT 1
-    """
-
-    with get_driver() as driver, driver.session() as session:
-        result = session.run(
-            cypher,
-            source=source.upper(),
-            destination=destination.upper(),
-        ).single()
+    with get_driver() as driver:
+        result = find_shortest_route(
+            driver,
+            source,
+            destination,
+        )
 
     if result is None:
         raise HTTPException(
@@ -201,7 +169,7 @@ def get_shortest_path(
             detail="No route found between these airports.",
         )
 
-    return ShortestPathResponse.model_validate(dict(result))
+    return ShortestPathResponse.model_validate(result)
 
 
 # --------------------------------------------------
@@ -284,6 +252,10 @@ def get_reachable_airports(
     return airports
 
 
+# --------------------------------------------------
+# 7. Simulate airport disruption
+# --------------------------------------------------
+
 @app.get(
     "/api/disruptions/airports/{iata}",
     response_model=DisruptionResponse,
@@ -317,3 +289,51 @@ def get_airport_disruption(
             ) from error
 
     return DisruptionResponse.model_validate(result)
+
+
+# --------------------------------------------------
+# 8. LLM assistant
+# --------------------------------------------------
+
+@app.post(
+    "/api/assistant/ask",
+    response_model=AssistantResponse,
+)
+def ask_assistant(request: AssistantQuestion) -> AssistantResponse:
+    """Answer a natural-language question using approved graph operations."""
+
+    try:
+        with get_driver() as driver:
+            result = answer_question(request.question, driver)
+
+    except InvalidAssistantIntent as error:
+        raise HTTPException(
+            status_code=422,
+            detail=str(error),
+        ) from error
+
+    except LookupError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error),
+        ) from error
+
+    except AuthenticationError as error:
+        raise HTTPException(
+            status_code=503,
+            detail="The LLM service is not configured correctly.",
+        ) from error
+
+    except RateLimitError as error:
+        raise HTTPException(
+            status_code=503,
+            detail="The LLM service is temporarily unavailable.",
+        ) from error
+
+    except APIConnectionError as error:
+        raise HTTPException(
+            status_code=503,
+            detail="Unable to connect to the LLM service.",
+        ) from error
+
+    return AssistantResponse.model_validate(result)
