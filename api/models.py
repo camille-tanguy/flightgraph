@@ -1,6 +1,7 @@
-"""Pydantic models for FlightGraph API responses."""
+"""Pydantic models for FlightGraph API responses.
 
-#Validate response structures
+Define and validate the structure of data returned by the API.
+"""
 
 from pydantic import BaseModel, Field
 
@@ -54,6 +55,7 @@ class ShortestPathResponse(BaseModel):
         description="Minimum number of flights required"
     )
 
+
 class ReachableAirportResponse(BaseModel):
     """An airport reachable within a limited number of flights."""
 
@@ -69,12 +71,12 @@ class ReachableAirportResponse(BaseModel):
     )
 
 class ConnectivityMetrics(BaseModel):
-        """Network connectivity measurements."""
+    """Network connectivity measurements."""
 
-        total_components: int
-        largest_component: int
-        total_airports: int
-        isolated_airports: int
+    total_components: int
+    largest_component: int
+    total_airports: int
+    isolated_airports: int
 
 
 class AirportIdentification(BaseModel):
