@@ -228,3 +228,56 @@ of the historical flight network despite eliminating 470 directed connections.
 - PageRank measures structural influence, not necessarily disruption impact.
 - Simulations model network structure, not operational flight cancellations.
 - Temporary GDS projections consume memory during execution.
+
+## Machine Learning — Airport Route Link Prediction
+
+FlightGraph includes a supervised machine learning experiment investigating
+whether graph-structural features improve the identification of historical
+airline connections compared with geographic distance alone.
+
+### Methodology
+
+- **Dataset:** Historical OpenFlights network (3,214 active airports;
+  36,906 directed connections).
+- **Task:** Binary classification of recorded and unrecorded directed routes.
+- **Split:** Approximately 80/20, grouping reciprocal routes together.
+- **Negative sampling:** Balanced positive and negative examples.
+- **Models:** Logistic Regression with standardized features.
+- **Baseline:** Geographic distance.
+- **Graph-enhanced:** Geographic distance, source out-degree,
+  destination in-degree, and common neighbors.
+
+Graph features are calculated from the training network to reduce
+data leakage. Positive training examples are evaluated with their
+candidate edges excluded from feature calculations.
+
+### Results
+
+| Metric | Baseline | Graph-enhanced |
+| --- | ---: | ---: |
+| Initial ROC-AUC | 0.9357 | **0.9922** |
+| Initial F1-score | 0.8748 | **0.9685** |
+| Distance-restricted ROC-AUC | 0.7801 | **0.9531** |
+| Distance-restricted F1-score | 0.6667 | **0.8696** |
+
+Graph-derived features improved route identification under both
+negative-sampling strategies.
+
+Limitations
+
+The dataset is historical, and unrecorded connections are treated
+as negative examples. The class distribution is artificially balanced,
+and results depend on the negative-sampling strategy.
+
+The distance-restricted experiment is exploratory rather than an
+independent validation. Training-positive feature construction also
+differs from held-out test feature construction.
+
+These models do not forecast future flight routes or estimate
+real-world route probabilities.
+
+### Notebook
+
+See [`notebooks/02_route_link_prediction.ipynb`](notebooks/02_route_link_prediction.ipynb)
+for the experimental methodology, feature engineering, model training,
+evaluation, and robustness analysis.
