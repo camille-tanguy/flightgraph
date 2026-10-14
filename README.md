@@ -99,3 +99,73 @@ relationships into Neo4j.
 
 OpenFlights contains historical route information. Connections in
 FlightGraph should not be interpreted as current flight schedules.
+
+## REST API
+
+FlightGraph provides a REST API built with FastAPI and connected to Neo4j.
+
+### Run the API
+
+Start the Neo4j database:
+
+```bash
+docker compose up -d
+```
+
+Activate the Python virtual environment and start FastAPI:
+
+```bash
+python -m uvicorn api.main:app --reload
+```
+
+Interactive API documentation is available at:
+
+<http://127.0.0.1:8000/docs>
+
+### Available endpoints
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/health` | Check API status |
+| GET | `/api/airports/{iata}` | Retrieve airport information |
+| GET | `/api/airports/{iata}/connections` | Find direct flight connections |
+| GET | `/api/routes/shortest` | Find a shortest route between airports |
+| GET | `/api/airports/{iata}/reachable` | Find airports reachable within a maximum number of flights |
+
+### Example requests
+
+Retrieve Paris Charles de Gaulle Airport:
+
+```http
+GET /api/airports/CDG
+```
+
+Find a shortest route from Paris to New York:
+
+```http
+GET /api/routes/shortest?source=CDG&destination=JFK
+```
+
+Find airports reachable from Paris within one flight:
+
+```http
+GET /api/airports/CDG/reachable?max_hops=1
+```
+
+### Run automated tests
+
+```bash
+python -m pytest tests/ -v
+```
+
+The API uses Pydantic for input and response validation.
+
+### Data limitations
+
+FlightGraph uses historical OpenFlights route data, not live flight schedules.
+
+Shortest routes minimize the number of flight connections, not travel time or ticket price.
+
+IATA codes are not guaranteed to uniquely identify airports in the underlying dataset.
+
+The reachability endpoint currently returns a maximum of 20 destinations.

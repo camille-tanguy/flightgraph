@@ -1,7 +1,15 @@
-fastapi
-uvicorn
-pytest
-pandas
-ipykernel
+# Database
 neo4j
 python-dotenv
+
+# Data processing
+pandas
+
+# REST API
+fastapi
+uvicorn
+
+# Testing
+pytest
+pytest-cov
+httpx2
