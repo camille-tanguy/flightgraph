@@ -1,0 +1,8 @@
+[MAIN]
+ignore=.venv
+
+[FORMAT]
+max-line-length=88
+
+[DESIGN]
+max-args=7
