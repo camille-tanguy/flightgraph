@@ -1,5 +1,9 @@
 # FlightGraph — Airline Network Resilience & Disruption Simulator
 
+[![CI](https://github.com/camille-tanguy/flightgraph/actions/workflows/ci.yml/badge.svg)](https://github.com/camille-tanguy/flightgraph/actions/workflows/ci.yml)
+
+[![Docker Publish](https://github.com/camille-tanguy/flightgraph/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/camille-tanguy/flightgraph/actions/workflows/docker-publish.yml)
+
 FlightGraph is a graph-based application designed to analyze airline
 networks, identify critical airports, and evaluate the impact of airport
 closures on global connectivity.
@@ -851,6 +855,53 @@ make clean
 ---
 
 ## Technical Documentation
+
+## Application Screenshots
+
+The following screenshots demonstrate FlightGraph's main
+functionalities and infrastructure.
+
+### FastAPI — Swagger Documentation
+
+The interactive Swagger interface exposes FlightGraph's
+REST API endpoints for airport exploration, pathfinding,
+disruption simulation, and AI-assisted queries.
+
+![FlightGraph Swagger API](docs/screenshots/swagger-api.png)
+
+### Neo4j — Airline Network Visualization
+
+Neo4j Browser visualizes the historical airline network
+as airport nodes connected by directed `FLIES_TO` relationships.
+
+The example shows outgoing connections from Paris
+Charles de Gaulle Airport (CDG).
+
+![FlightGraph Neo4j Graph](docs/screenshots/neo4j-graph.png)
+
+### Airport Disruption Simulation
+
+FlightGraph simulates the closure of an airport and compares
+network connectivity before and after the disruption.
+
+The example below illustrates the structural impact
+of closing CDG.
+
+![FlightGraph Airport Disruption Simulation](docs/screenshots/disruption-simulation.png)
+
+### Docker Infrastructure
+
+Docker Compose runs FlightGraph using three services:
+
+- Neo4j with Graph Data Science.
+- FastAPI application.
+- Nginx reverse proxy.
+
+All three services are configured with health checks.
+
+![FlightGraph Docker Services](docs/screenshots/docker-services.png)
+
+---
 
 FlightGraph includes technical documentation covering its
 architecture, database model, engineering decisions, and
