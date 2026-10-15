@@ -133,6 +133,35 @@ def get_graph_relationship_count(
 
     return result["relationshipCount"]
 
+def ensure_baseline_graph(driver: Driver) -> None:
+    """Create the baseline GDS projection if it does not exist."""
+
+    query = """
+    CALL gds.graph.exists('flightgraph')
+    YIELD exists
+    RETURN exists
+    """
+
+    with driver.session() as session:
+        exists = session.run(query).single()["exists"]
+
+        if exists:
+            return
+
+        session.run(
+            """
+            CALL gds.graph.project(
+                'flightgraph',
+                'Airport',
+                {
+                    FLIES_TO: {
+                        orientation: 'NATURAL'
+                    }
+                }
+            )
+            """
+        ).consume()
+
 
 def simulate_airport_closure(driver: Driver, iata: str) -> dict:
     """Simulate an airport closure without modifying stored graph data."""
@@ -145,7 +174,10 @@ def simulate_airport_closure(driver: Driver, iata: str) -> dict:
     graph_name = f"disruption_{uuid4().hex}"
 
     try:
-        # 3. Calculate the original network's connectivity.
+        # 3. Ensure the baseline GDS projection is available.
+        ensure_baseline_graph(driver)
+
+        # 4. Calculate the original network's connectivity.
         baseline = get_connectivity_metrics(driver, "flightgraph")
         baseline_route_count = get_graph_relationship_count(
             driver,
