@@ -1,14 +1,21 @@
 # FlightGraph — Airline Network Resilience & Disruption Simulator
 
-FlightGraph is a graph-based application designed to analyze airline networks, identify critical airports, and evaluate the impact of airport closures on global connectivity.
+FlightGraph is a graph-based application designed to analyze airline
+networks, identify critical airports, and evaluate the impact of airport
+closures on global connectivity.
 
-The project combines graph database technology, network analytics, machine learning, and AI-assisted exploration to investigate how disruptions affect airline connections and which alternative routes remain available.
+The project combines graph database technology, network analytics,
+machine learning, and AI-assisted exploration to investigate how
+disruptions affect airline connections.
 
 **Research question:**
 
-> How can graph analytics and AI identify critical airports, evaluate network disruptions, and recommend alternative connections?
+> How can graph analytics and AI identify critical airports, evaluate
+> network disruptions, and recommend alternative connections?
 
-FlightGraph uses historical OpenFlights data and is intended for network analysis and educational experimentation, not real-time flight planning.
+FlightGraph uses historical OpenFlights data and is intended for
+network analysis and educational experimentation, not real-time
+flight planning.
 
 ---
 
@@ -22,7 +29,8 @@ FlightGraph implements five main functionalities:
 - **Disruption simulation:** Evaluate how closing an airport affects network connectivity.
 - **AI assistant:** Answer natural-language questions through validated, predefined graph operations.
 
-The project also includes a supervised machine learning experiment for airport-route link prediction.
+The project also includes a supervised machine learning experiment
+for airport-route link prediction.
 
 ## Technology Stack
 
@@ -44,7 +52,9 @@ The project also includes a supervised machine learning experiment for airport-r
 
 ## Project Status
 
-**In development — Milestone 7: Infrastructure, Testing & CI/CD*
+**Milestone 8 — Final Testing, Documentation, and Submission Preparation*
+
+The core application has been implemented and tested locally.
 
 Implemented components include:
 
@@ -53,14 +63,18 @@ Implemented components include:
 - FastAPI endpoints for airport exploration and shortest routes.
 - PageRank and Weakly Connected Components analytics.
 - Single-airport closure simulation.
+- Automatic recovery of missing GDS graph projections.
 - Supervised route link-prediction experiment.
 - AI assistant with validated, predefined graph operations.
 - Three-service Docker Compose architecture.
 - Nginx reverse proxy and container health checks.
 - Automated testing and code-quality checks.
 - Multi-platform Docker image publishing through GitHub Actions.
+- Architecture and graph schema documentation.
+- Interactive demonstration notebook.
 
-Milestone 8 will focus on optimization, documentation, architecture diagrams, and the final demonstration.
+Remaining work focuses on final documentation, screenshots,
+rubric verification, and live demonstration preparation.
 
 ---
 
@@ -102,11 +116,19 @@ FlightGraph uses a three-service architecture managed by Docker Compose.
 
 **Nginx** receives incoming HTTP requests and forwards them to FastAPI.
 
-**FastAPI** validates requests, executes application logic, and communicates with Neo4j.
+**FastAPI** validates requests, executes application logic, and
+communicates with Neo4j.
 
-**Neo4j** stores the airline network and provides graph querying and analytics capabilities.
+**Neo4j** stores the airline network and provides graph querying
+and analytics capabilities.
 
-Docker Compose manages service networking, startup dependencies, and health checks.
+Neo4j Graph Data Science runs as a plugin inside the Neo4j service.
+
+Docker Compose manages service networking, startup dependencies,
+and health checks.
+
+For further details, see the
+[System Architecture documentation](docs/architecture.md).
 
 ---
 
@@ -119,7 +141,8 @@ To run FlightGraph locally, install:
 - Git
 - Docker Desktop with Docker Compose
 
-Python 3.13 is also needed for local development, database ingestion, and testing.
+Python 3.13 is also needed for local development, database ingestion,
+and testing.
 
 ### 1. Clone the repository
 
@@ -150,7 +173,8 @@ OPENAI_MODEL=gpt-4.1-mini
 
 Replace the example password with your own.
 
-The OpenAI API key is optional for the core graph functionality but required for AI assistant requests.
+The OpenAI API key is optional for the core graph functionality
+but required for AI assistant requests.
 
 **Security:** Never commit `.env` or API credentials to GitHub.
 
@@ -159,18 +183,17 @@ The OpenAI API key is optional for the core graph functionality but required for
 Build and start the three Docker services:
 
 ```bash
-docker compose up -d --build --wait
+make docker-run
 ```
 
 Alternatively:
 
 ```bash
-make up
+docker compose up -d --build --wait
 ```
 
-Note that `make up` starts the containers without waiting for all health checks to finish.
-
-The first startup may take longer because Docker needs to download images and install dependencies.
+The first startup may take longer because Docker needs to
+download images and install dependencies.
 
 ### 4. Verify the services
 
@@ -208,11 +231,14 @@ Expected response:
 | API health endpoint | <http://localhost:8080/health> |
 | Neo4j Browser | <http://localhost:7474> |
 
-Swagger provides an interactive interface for exploring and testing the API endpoints.
+Swagger provides an interactive interface for exploring and
+testing the API endpoints.
 
-**Important:** Starting Docker Compose does not automatically download or import the OpenFlights dataset.
+**Important:** Starting Docker Compose does not automatically
+download or import the OpenFlights dataset.
 
-Follow the database setup instructions below to populate a new Neo4j database.
+Follow the database setup instructions below to populate
+a new Neo4j database.
 
 ### 6. Stop the application
 
@@ -228,17 +254,21 @@ docker compose down
 
 Neo4j data is stored in a persistent Docker volume.
 
-Do not use `docker compose down -v` unless you explicitly intend to remove the database volume and its stored data.
+Do not use `docker compose down -v` unless you explicitly intend
+to remove the database volume and its stored data.
 
 ---
 
 ## Public Docker Image
 
-FlightGraph publishes a public, multi-platform Docker image for its FastAPI backend.
+FlightGraph publishes a public, multi-platform Docker image
+for its FastAPI backend.
 
 **Image:**
 
-`ghcr.io/camille-tanguy/flightgraph-api:latest`
+```text
+ghcr.io/camille-tanguy/flightgraph-api:latest
+```
 
 Download the image using:
 
@@ -248,14 +278,17 @@ docker pull ghcr.io/camille-tanguy/flightgraph-api:latest
 
 Supported architectures:
 
-- `linux/amd64` — Intel/AMD systems
-- `linux/arm64` — ARM-based systems, including Apple Silicon
+- `linux/amd64` — Intel/AMD systems.
+- `linux/arm64` — ARM-based systems, including Apple Silicon.
 
-The image is automatically built and published through GitHub Actions when relevant changes are merged into `main`.
+The image is automatically built and published through GitHub Actions
+when relevant changes are merged into `main`.
 
-**Important:** The published image contains the FastAPI application, not the complete three-service environment.
+**Important:** The published image contains the FastAPI application,
+not the complete three-service environment.
 
-The full application also requires Neo4j and Nginx, which are configured through Docker Compose.
+The full application also requires Neo4j and Nginx, which are
+configured through Docker Compose.
 
 [View the public FlightGraph Docker image](https://github.com/camille-tanguy/flightgraph/pkgs/container/flightgraph-api)
 
@@ -274,9 +307,11 @@ Additional airline information may be derived from OpenFlights data.
 
 **Source:** [OpenFlights GitHub Repository](https://github.com/jpatokal/openflights)
 
-OpenFlights contains historical airline route information and does not necessarily represent currently operated routes.
+OpenFlights contains historical airline route information and does
+not necessarily represent currently operated routes.
 
-FlightGraph results should therefore be interpreted as structural analyses of the recorded network rather than real-time aviation information.
+FlightGraph results should therefore be interpreted as structural
+analyses of the recorded network rather than real-time aviation information.
 
 ---
 
@@ -288,7 +323,8 @@ The following instructions initialize a new database.
 
 ### 1. Start Neo4j
 
-If the complete Docker application is not already running, start the database:
+If the complete Docker application is not already running,
+start the database:
 
 ```bash
 docker compose up -d neo4j
@@ -309,17 +345,25 @@ python3.13 -m venv .venv
 source .venv/bin/activate
 ```
 
-Install the project dependencies:
+Install project dependencies:
+
+```bash
+make install
+```
+
+Equivalent command:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-The ingestion scripts run on your local machine and connect to Neo4j through `localhost:7687`, as configured in `.env`.
+The ingestion scripts run on your local machine and connect
+to Neo4j through `localhost:7687`, as configured in `.env`.
 
 ### 3. Download the datasets
 
-Download `airports.dat` and `routes.dat` from the [OpenFlights data directory](https://github.com/jpatokal/openflights/tree/master/data).
+Download `airports.dat` and `routes.dat` from the
+[OpenFlights data directory](https://github.com/jpatokal/openflights/tree/master/data).
 
 Place the files in:
 
@@ -335,7 +379,8 @@ data/raw/
 python scripts/init_db.py
 ```
 
-This script creates the database constraints and indexes used by FlightGraph.
+This script creates the database constraints and indexes
+used by FlightGraph.
 
 ### 5. Import the flight network
 
@@ -343,7 +388,8 @@ This script creates the database constraints and indexes used by FlightGraph.
 python scripts/ingest_data.py
 ```
 
-The ingestion process imports airports, countries, airlines, and the relevant graph relationships.
+The ingestion process imports airports, countries, airlines,
+and the relevant graph relationships.
 
 ### 6. Verify the database
 
@@ -368,15 +414,58 @@ The validated project dataset contained:
 | Airports | 7,698 |
 | Directed airport connections | 36,906 |
 
-These figures correspond to the project's validated dataset and ingestion configuration.
+These figures correspond to the project's validated dataset
+and ingestion configuration.
 
 Results may differ if the source data or ingestion rules change.
 
 ---
 
+## Graph Database Model
+
+FlightGraph uses three node labels:
+
+- `Airport`
+- `Airline`
+- `Country`
+
+And three relationship types:
+
+- `FLIES_TO`
+- `OPERATES`
+- `LOCATED_IN`
+
+The main analytical relationship is:
+
+```text
+(Airport)-[:FLIES_TO]->(Airport)
+```
+
+Connections are directed because a recorded connection from
+airport A to airport B does not necessarily imply the reverse.
+
+Multiple airlines operating the same airport pair are
+aggregated into relationship properties.
+
+This modeling approach prioritizes network analysis rather
+than individual flight operations.
+
+Database constraints include unique airport identifiers,
+airline codes, and country names.
+
+An additional index supports airport searches by IATA code.
+
+For details, see:
+
+- [Graph Database Schema](docs/graph-schema.md)
+- [Modeling Rationale and Anti-Genericity Analysis](docs/modeling-rationale.md)
+
+---
+
 ## REST API
 
-FlightGraph provides a REST API built with FastAPI and connected to Neo4j.
+FlightGraph provides a REST API built with FastAPI
+and connected to Neo4j.
 
 Pydantic is used to validate requests and structure API responses.
 
@@ -385,7 +474,7 @@ Pydantic is used to validate requests and structure API responses.
 **Recommended: Docker Compose*
 
 ```bash
-docker compose up -d --build --wait
+make docker-run
 ```
 
 Access Swagger at:
@@ -403,12 +492,22 @@ docker compose up -d neo4j
 Then run FastAPI locally:
 
 ```bash
-python -m uvicorn api.main:app --reload
+make run
 ```
 
 Access Swagger at:
 
 <http://127.0.0.1:8000/docs>
+
+If port 8000 is unavailable, use:
+
+```bash
+make run PORT=8001
+```
+
+Access the local API at:
+
+<http://127.0.0.1:8001/docs>
 
 ### Available Endpoints
 
@@ -448,7 +547,8 @@ Simulate the closure of CDG:
 GET /api/disruptions/airports/CDG
 ```
 
-The interactive Swagger interface provides request schemas and response documentation for all endpoints.
+The interactive Swagger interface provides request schemas
+and response documentation for all endpoints.
 
 ### API Limitations
 
@@ -462,7 +562,9 @@ The interactive Swagger interface provides request schemas and response document
 
 ## Graph Analytics & Disruption Simulation
 
-FlightGraph uses Neo4j Graph Data Science (GDS) to analyze airline network connectivity and evaluate the structural impact of airport closures.
+FlightGraph uses Neo4j Graph Data Science (GDS) to analyze
+airline network connectivity and evaluate the structural impact
+of airport closures.
 
 ### Graph Algorithms
 
@@ -470,26 +572,36 @@ Two GDS algorithms are implemented.
 
 **PageRank*
 
-Identifies structurally influential airports based on their position in the directed flight network.
+Identifies structurally influential airports based on their
+position in the directed flight network.
 
-PageRank measures network importance but does not directly quantify the consequences of closing an airport.
+PageRank measures network importance but does not directly
+quantify the consequences of closing an airport.
 
 **Weakly Connected Components (WCC)*
 
-Identifies connected groups of airports while ignoring relationship direction.
+Identifies connected groups of airports while ignoring
+relationship direction.
 
-WCC helps measure structural fragmentation but does not establish whether passengers can travel between two airports following the direction of available flights.
+WCC helps measure structural fragmentation but does not
+establish whether passengers can travel between two airports
+following the direction of available flights.
 
 ### Graph Projection
 
 The validated GDS projection contains:
 
-- 7,698 airports
-- 36,906 directed airport-to-airport connections
+- **7,698 airports**
+- **36,906 directed airport-to-airport connections**
+
+The projection includes Airport nodes and FLIES_TO relationships.
+
+It excludes Airline and Country nodes because the main
+analytical task concerns airport network connectivity.
 
 ### Airport Closure Simulation
 
-FlightGraph supports read-only simulations of single-airport closures.
+FlightGraph supports single-airport closure simulations.
 
 Example:
 
@@ -500,12 +612,25 @@ GET /api/disruptions/airports/CDG
 The simulator:
 
 1. Identifies the airport using its unique OpenFlights ID.
-2. Creates a temporary GDS graph excluding that airport.
-3. Calculates connectivity metrics using WCC.
-4. Compares baseline and disrupted networks.
-5. Deletes the temporary graph after the simulation.
+2. Ensures that the baseline GDS projection exists.
+3. Creates a temporary GDS graph excluding the selected airport.
+4. Calculates connectivity metrics using WCC.
+5. Compares baseline and disrupted networks.
+6. Deletes the temporary graph after the simulation.
 
-The simulation does not permanently delete airports or relationships from Neo4j.
+The simulation does not permanently delete airports or
+relationships from Neo4j.
+
+**Reliability improvement:**
+
+GDS projections exist in memory and may disappear after
+Neo4j restarts.
+
+FlightGraph checks whether the baseline projection exists
+and recreates it automatically when necessary.
+
+This behavior was verified by removing the baseline projection,
+calling the disruption API, and confirming successful recovery.
 
 ### Validated Example: CDG Closure
 
@@ -517,7 +642,9 @@ The simulation does not permanently delete airports or relationships from Neo4j.
 | Largest component | 3,188 | 3,186 | -2 |
 | Isolated airports | 4,484 | 4,485 | +1 |
 
-Removing CDG eliminates 470 directed connections but causes limited additional fragmentation in the historical network under the WCC metric.
+Removing CDG eliminates 470 directed connections but causes
+limited additional fragmentation in the historical network
+under the WCC metric.
 
 ### Limitations
 
@@ -531,7 +658,10 @@ Removing CDG eliminates 470 directed connections but causes limited additional f
 
 ## Machine Learning — Airport Route Link Prediction
 
-FlightGraph includes a supervised machine learning experiment investigating whether graph-structural features improve the identification of historical airline connections compared with geographic distance alone.
+FlightGraph includes a supervised machine learning experiment
+investigating whether graph-structural features improve the
+identification of historical airline connections compared
+with geographic distance alone.
 
 ### Methodology
 
@@ -543,9 +673,11 @@ FlightGraph includes a supervised machine learning experiment investigating whet
 - **Baseline:** Geographic distance.
 - **Graph-enhanced model:** Geographic distance, source out-degree, destination in-degree, and common neighbors.
 
-Graph features are calculated from the training network to reduce data leakage.
+Graph features are calculated from the training network
+to reduce data leakage.
 
-Positive training examples are evaluated with their candidate edges excluded from feature calculations.
+Positive training examples are evaluated with their candidate
+edges excluded from feature calculations.
 
 ### Results
 
@@ -556,33 +688,46 @@ Positive training examples are evaluated with their candidate edges excluded fro
 | Distance-restricted ROC-AUC | 0.7801 | **0.9531** |
 | Distance-restricted F1-score | 0.6667 | **0.8696** |
 
-Graph-derived features improved route identification under both negative-sampling strategies.
+Graph-derived features improved route identification
+under both negative-sampling strategies.
 
- Limitations
+Limitations
 
-The dataset is historical, and unrecorded connections are treated as negative examples.
+The dataset is historical, and unrecorded connections are
+treated as negative examples.
 
-The class distribution is artificially balanced, and results depend on the negative-sampling strategy.
+The class distribution is artificially balanced, and results
+depend on the negative-sampling strategy.
 
-The distance-restricted experiment is exploratory rather than an independent validation.
+The distance-restricted experiment is exploratory rather
+than an independent validation.
 
-Training-positive feature construction also differs from held-out test feature construction.
+Training-positive feature construction also differs from
+held-out test feature construction.
 
-These models do not forecast future flight routes or estimate real-world route probabilities.
+These models do not forecast future flight routes or
+estimate real-world route probabilities.
 
 ### Notebook
 
-See [`notebooks/02_route_link_prediction.ipynb`](notebooks/02_route_link_prediction.ipynb) for the experimental methodology, feature engineering, model training, evaluation, and robustness analysis.
+See
+[`notebooks/02_route_link_prediction.ipynb`](notebooks/02_route_link_prediction.ipynb)
+for the experimental methodology, feature engineering,
+model training, evaluation, and robustness analysis.
 
 ---
 
 ## AI Assistant
 
-FlightGraph includes an AI-assisted interface for exploring the airline network through natural-language questions.
+FlightGraph includes an AI-assisted interface for exploring
+the airline network through natural-language questions.
 
-The assistant uses an LLM to interpret requests and map them to approved graph operations.
+The assistant uses an LLM to interpret requests and map them
+to approved graph operations.
 
-Rather than executing arbitrary LLM-generated Cypher queries, FlightGraph validates the requested operation before interacting with Neo4j.
+Rather than executing arbitrary LLM-generated Cypher queries,
+FlightGraph validates the requested operation before interacting
+with Neo4j.
 
 ### Design Principles
 
@@ -610,13 +755,15 @@ For example:
 
 The assistant requires a configured OpenAI API key.
 
-Its responses are limited by the supported operations and the historical nature of the underlying dataset.
+Its responses are limited by the supported operations and
+the historical nature of the underlying dataset.
 
 ---
 
 ## Testing and Code Quality
 
-FlightGraph uses automated tests and static code analysis to maintain software quality.
+FlightGraph uses automated tests and static code analysis
+to maintain software quality.
 
 ### Run Tests
 
@@ -632,20 +779,22 @@ make lint
 
 ### Verified Quality Metrics
 
-The following results were obtained during Milestone 7:
+The following results were verified locally on October 15, 2026:
 
 | Metric | Result |
 | --- | ---: |
-| Automated tests | 24 passing |
-| Test coverage | 63.58% |
-| Pylint score | 9.64/10 |
-| Ruff | Passing |
+| Automated tests | **26 passing** |
+| Test coverage | **64.74%** |
+| Pylint score | **10.00/10** |
+| Ruff | **Passing** |
 
-These measurements describe the validated project state at the time of testing and may change as development continues.
+These measurements describe the verified local project state
+and may change as development continues.
 
 ### Continuous Integration
 
-FlightGraph uses GitHub Actions to automatically verify Pull Requests.
+FlightGraph uses GitHub Actions to automatically verify
+pull requests.
 
 The CI workflow:
 
@@ -654,7 +803,8 @@ The CI workflow:
 3. Executes Pylint with a minimum score of 9.5/10.
 4. Runs pytest with a minimum coverage threshold of 60%.
 
-The publishing workflow builds and uploads the FastAPI Docker image to GitHub Container Registry.
+The publishing workflow builds and uploads the FastAPI
+Docker image to GitHub Container Registry.
 
 Images are published for AMD64 and ARM64 architectures.
 
@@ -662,16 +812,101 @@ Images are published for AMD64 and ARM64 architectures.
 
 ## Development Commands
 
-The project includes a Makefile for frequently used development tasks.
+The project includes a Makefile for frequently used
+development tasks.
 
 | Command | Description |
 | --- | --- |
 | `make help` | Display available commands |
+| `make install` | Install Python dependencies |
+| `make run` | Start FastAPI locally |
+| `make docker-run` | Build and start Docker services |
 | `make test` | Run tests and coverage |
 | `make lint` | Run Ruff and Pylint |
 | `make up` | Start Docker services |
 | `make down` | Stop Docker services |
 | `make logs` | Follow Docker container logs |
+| `make clean` | Remove temporary files and caches |
+
+Example development workflow:
+
+```bash
+make install
+make test
+make lint
+```
+
+To launch the Docker application:
+
+```bash
+make docker-run
+```
+
+To remove generated Python caches and test artifacts:
+
+```bash
+make clean
+```
+
+---
+
+## Technical Documentation
+
+FlightGraph includes technical documentation covering its
+architecture, database model, engineering decisions, and
+query performance.
+
+| Document | Description |
+| --- | --- |
+| [System Architecture](docs/architecture.md) | Docker services, FastAPI, Neo4j, and application components |
+| [Graph Database Schema](docs/graph-schema.md) | Node labels, relationships, constraints, and indexes |
+| [Modeling Rationale](docs/modeling-rationale.md) | Schema alternatives, design trade-offs, and anti-genericity analysis |
+| [Query Optimization](docs/query-optimization.md) | Cypher execution plans and performance analysis |
+| [Demonstration Notebook](demo.ipynb) | Interactive walkthrough of FlightGraph's main features |
+| [Machine Learning Notebook](notebooks/02_route_link_prediction.ipynb) | Route link-prediction experiment and evaluation |
+
+These documents provide additional evidence of the project's
+technical implementation and engineering decisions.
+
+---
+
+## Demonstration
+
+FlightGraph includes an interactive Jupyter notebook:
+
+[`demo.ipynb`](demo.ipynb)
+
+The notebook demonstrates:
+
+1. API health verification.
+2. Airport exploration.
+3. Direct connections.
+4. Shortest-path queries.
+5. Multi-hop reachability.
+6. Airport closure simulation.
+7. Graph analytics.
+8. Machine learning results.
+9. Optional AI assistant interaction.
+
+### Running the demonstration
+
+Start the Docker services:
+
+```bash
+make docker-run
+```
+
+Ensure the OpenFlights dataset has been imported into Neo4j.
+
+Open `demo.ipynb` in VS Code or Jupyter.
+
+Select the Python environment containing the project's
+dependencies.
+
+Run the notebook cells in order.
+
+The AI assistant demonstration is optional and requires
+a configured OpenAI API key.
 
 ---
 
@@ -704,4 +939,5 @@ Original dataset:
 
 The dataset is attributed to its original maintainers.
 
-The repository's software licensing and the licensing terms applicable to the underlying dataset should be considered separately.
+The repository's software licensing and the licensing terms
+applicable to the underlying dataset should be considered separately.
