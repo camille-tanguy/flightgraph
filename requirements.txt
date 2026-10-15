@@ -12,7 +12,7 @@ uvicorn
 # Testing
 pytest
 pytest-cov
-httpx2
+httpx
 
 # ML
 scikit-learn
