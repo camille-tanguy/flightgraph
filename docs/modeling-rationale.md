@@ -245,7 +245,7 @@ Its airport-only projection contains:
 
 Two graph algorithms are used:
 
-**PageRank**
+**PageRank*
 
 PageRank measures structural influence based on the
 network's directed connections.
@@ -256,7 +256,7 @@ positions within the historical network.
 However, a high PageRank score does not automatically
 imply that closing an airport would cause severe fragmentation.
 
-**Weakly Connected Components (WCC)**
+**Weakly Connected Components (WCC)*
 
 WCC identifies groups of airports connected when
 relationship direction is ignored.
